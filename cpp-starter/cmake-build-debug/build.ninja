@@ -67,6 +67,12 @@ build CMakeFiles/project.dir/problems/dfa.cpp.obj: CXX_COMPILER__project_unscann
   OBJECT_DIR = CMakeFiles\project.dir
   OBJECT_FILE_DIR = CMakeFiles\project.dir\problems
 
+build CMakeFiles/project.dir/problems/det.cpp.obj: CXX_COMPILER__project_unscanned_Debug C$:/Users/szabo/Desktop/FormRepo/FormalisNyelvek/cpp-starter/problems/det.cpp || cmake_object_order_depends_target_project
+  DEP_FILE = CMakeFiles\project.dir\problems\det.cpp.obj.d
+  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\project.dir
+  OBJECT_FILE_DIR = CMakeFiles\project.dir\problems
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target project
@@ -75,7 +81,7 @@ build CMakeFiles/project.dir/problems/dfa.cpp.obj: CXX_COMPILER__project_unscann
 #############################################
 # Link the executable project.exe
 
-build project.exe: CXX_EXECUTABLE_LINKER__project_Debug CMakeFiles/project.dir/main.cpp.obj CMakeFiles/project.dir/problems/sum.cpp.obj CMakeFiles/project.dir/problems/dfa.cpp.obj
+build project.exe: CXX_EXECUTABLE_LINKER__project_Debug CMakeFiles/project.dir/main.cpp.obj CMakeFiles/project.dir/problems/sum.cpp.obj CMakeFiles/project.dir/problems/dfa.cpp.obj CMakeFiles/project.dir/problems/det.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\project.dir

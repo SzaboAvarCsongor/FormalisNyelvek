@@ -9,4 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_executable(project main.cpp problems/sum.cpp
         problems/dfa.cpp
         problems/dfa.hpp
+        problems/det.cpp
+        problems/det.hpp
 )
