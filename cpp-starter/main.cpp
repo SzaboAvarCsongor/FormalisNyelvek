@@ -7,6 +7,7 @@
 #include "problems/sum.hpp"
 #include "problems/dfa.hpp"
 #include "problems/det.hpp"
+#include "problems/mini.hpp"
 
 int runProblem(int argc, char* argv[]) {
     std::vector<Problem *> problems;
@@ -14,6 +15,7 @@ int runProblem(int argc, char* argv[]) {
     problems.push_back(new SumProblem());
     problems.push_back(new DFAProblem());
     problems.push_back(new DetProblem());
+    problems.push_back(new MiniProblem());
 
     cxxopts::Options options("project", "Run the specific problem");
 

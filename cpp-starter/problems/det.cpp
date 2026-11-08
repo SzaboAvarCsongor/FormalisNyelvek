@@ -8,15 +8,18 @@
 #include <sstream>
 #include <vector>
 
+// Inicializálja a determináláshoz szükséges parancssori kapcsolót.
 void DetProblem::initialize_parser(cxxopts::Options &options) {
     options.add_options()
         ("det", "Determinize the automaton");
 }
 
+// Ellenőrzi, hogy a determinálás feladatot választották-e.
 bool DetProblem::is_chosen_problem(const cxxopts::ParseResult &args) {
     return args.count("det") > 0;
 }
 
+// Beolvassa és ellenőrzi az automata adatait a bemeneti fájlból.
 bool DetProblem::readAutomaton() {
     std::ifstream inputFile(inputFilename);
 
@@ -29,7 +32,7 @@ bool DetProblem::readAutomaton() {
     std::string line;
     std::string token;
 
-    // 1. sor: állapotok
+    // Beolvassa az állapotokat.
     if (!std::getline(inputFile, line)) {
         std::cerr << "Invalid input file.\n";
         return false;
@@ -42,7 +45,7 @@ bool DetProblem::readAutomaton() {
         }
     }
 
-    // 2. sor: ábécé
+    // Beolvassa és rendezi az ábécét.
     if (!std::getline(inputFile, line)) {
         std::cerr << "Invalid input file.\n";
         return false;
@@ -62,7 +65,7 @@ bool DetProblem::readAutomaton() {
         alphabet.end()
     );
 
-    // kezdőállapot
+    // Beolvassa és ellenőrzi a kezdőállapotot.
     if (!std::getline(inputFile, line)) {
         std::cerr << "Invalid input file.\n";
         return false;
@@ -76,7 +79,7 @@ bool DetProblem::readAutomaton() {
         }
     }
 
-    // végállapotok
+    // Beolvassa és ellenőrzi a végállapotokat.
     if (!std::getline(inputFile, line)) {
         std::cerr << "Invalid input file.\n";
         return false;
@@ -93,7 +96,7 @@ bool DetProblem::readAutomaton() {
         }
     }
 
-    // A további sorok: forrásállapot, szimbólum, célállapot
+    // Beolvassa és ellenőrzi az átmeneteket.
     while (std::getline(inputFile, line)) {
         if (line.empty()) {
             continue;
@@ -125,6 +128,7 @@ bool DetProblem::readAutomaton() {
     return true;
 }
 
+// Determinisztikussá alakítja az automatát, majd kiírja az eredményt.
 bool DetProblem::determinize() {
     using StateSet = std::set<std::string>;
 
@@ -138,6 +142,7 @@ bool DetProblem::determinize() {
     stateNumbers[initial] = 0;
     pending.push(initial);
 
+    // Megkeresi az elérhető állapothalmazokat.
     while (!pending.empty()) {
         StateSet current = pending.front();
         pending.pop();
@@ -178,6 +183,7 @@ bool DetProblem::determinize() {
         }
     }
 
+    // Megnyitja a kimeneti fájlt.
     std::ofstream outputFile(outputFilename);
 
     if (!outputFile) {
@@ -186,24 +192,24 @@ bool DetProblem::determinize() {
         return false;
     }
 
-    // 1. sor: s0 s1 s2 ...
+    // Kiírja a determinisztikus automata állapotait.
     for (int i = 0; i < static_cast<int>(dfaStates.size()); ++i) {
         if (i > 0) outputFile << ' ';
         outputFile << 's' << i;
     }
     outputFile << '\n';
 
-    // 2. sor: ábécé
+    // Kiírja az ábécét.
     for (std::size_t i = 0; i < alphabet.size(); ++i) {
         if (i > 0) outputFile << ' ';
         outputFile << alphabet[i];
     }
     outputFile << '\n';
 
-    // 3. sor: kezdőállapot
+    // Kiírja a kezdőállapotot.
     outputFile << "s0\n";
 
-    // 4. sor: végállapotok
+    // Kiírja azokat az állapotokat, amelyek végállapotok.
     bool first = true;
 
     for (int i = 0; i < static_cast<int>(dfaStates.size()); ++i) {
@@ -224,7 +230,7 @@ bool DetProblem::determinize() {
     }
     outputFile << '\n';
 
-    // Átmenetek: állapotsorrend, majd ábécésorrend.
+    // Kiírja a determinisztikus automata átmeneteit.
     for (int i = 0; i < static_cast<int>(dfaStates.size()); ++i) {
         for (const std::string& symbol : alphabet) {
             StateSet destination;
@@ -258,6 +264,7 @@ bool DetProblem::determinize() {
     return true;
 }
 
+// Beolvassa a fájlneveket, majd elindítja a beolvasást és a determinálást.
 int DetProblem::run(const cxxopts::ParseResult &args) {
     inputFilename = args["input"].as<std::string>();
     outputFilename = args["output"].as<std::string>();
