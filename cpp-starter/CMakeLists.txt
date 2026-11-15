@@ -13,4 +13,6 @@ add_executable(project main.cpp problems/sum.cpp
         problems/det.hpp
         problems/mini.cpp
         problems/mini.hpp
+        problems/rgx.cpp
+        problems/rgx.hpp
 )

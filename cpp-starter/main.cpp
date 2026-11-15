@@ -8,6 +8,7 @@
 #include "problems/dfa.hpp"
 #include "problems/det.hpp"
 #include "problems/mini.hpp"
+#include "problems/rgx.hpp"
 
 int runProblem(int argc, char* argv[]) {
     std::vector<Problem *> problems;
@@ -16,6 +17,7 @@ int runProblem(int argc, char* argv[]) {
     problems.push_back(new DFAProblem());
     problems.push_back(new DetProblem());
     problems.push_back(new MiniProblem());
+    problems.push_back(new RgxProblem());
 
     cxxopts::Options options("project", "Run the specific problem");
 
