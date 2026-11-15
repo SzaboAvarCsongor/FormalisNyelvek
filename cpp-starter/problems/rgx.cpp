@@ -10,8 +10,7 @@
 
 namespace {
 
-// Common line prefix: date time pid tid level
-// (the pattern suggested in the assignment, anchored at the start of the line)
+// Common line prefix: date time pid tid
 const std::string P = "^[0-9-]+ [0-9:.]+ +[0-9]+ +[0-9]+ ";
 
 std::vector<std::string> readLines(const std::string &path) {
@@ -33,7 +32,7 @@ void writeLines(const std::string &path, const std::vector<std::string> &out) {
     }
 }
 
-// 1. subtask group: count matching lines for each pattern
+// --rgx 1: number of matching lines for each subtask
 std::vector<std::string> task1(const std::vector<std::string> &lines) {
     const std::vector<std::regex> pats = {
         // 1. lines from 10-15
@@ -44,6 +43,8 @@ std::vector<std::string> task1(const std::vector<std::string> &lines) {
         std::regex("^[0-9-]+ [0-9]+:[0-9]+:51\\."),
         // 4. lowmemorykiller tag
         std::regex(P + "[IDVEFAW] lowmemorykiller *:"),
+        // 4. alternative (any line containing the word):
+        // std::regex("lowmemorykiller"),
         // 5. 10:18:51 with pid 221
         std::regex("^[0-9-]+ 10:18:51\\.[0-9]+ +221 +[0-9]+ [IDVEFAW] "),
         // 6. errors
@@ -52,10 +53,14 @@ std::vector<std::string> task1(const std::vector<std::string> &lines) {
         std::regex(P + "W PackageManager *:"),
         // 8. ExoPlayer debug
         std::regex(P + "D [^:]*ExoPlayer[^:]*:"),
+        // 8. alternative (exact tag only):
+        // std::regex(P + "D ExoPlayer *:"),
         // 9. errors and warnings with .java:
         std::regex(P + "[EW] .*\\.java:"),
         // 10. "Thread" in the message part (after the tag)
         std::regex(P + "[IDVEFAW] [^:]+: .*Thread"),
+        // 10. alternative (whole word only):
+        // std::regex(P + "[IDVEFAW] [^:]+: .*\\bThread\\b"),
     };
 
     std::vector<int> cnt(pats.size(), 0);
@@ -70,7 +75,7 @@ std::vector<std::string> task1(const std::vector<std::string> &lines) {
     return out;
 }
 
-// 2. file names (*.java) from error lines, in order of occurrence
+// --rgx 2: file names (*.java) from error lines, in order of occurrence
 std::vector<std::string> task2(const std::vector<std::string> &lines) {
     const std::regex err(P + "E ");
     const std::regex java("[A-Za-z0-9_$]+\\.java");
@@ -85,9 +90,9 @@ std::vector<std::string> task2(const std::vector<std::string> &lines) {
     return out;
 }
 
-// 3. distinct process ids in order of first appearance
+// --rgx 3: distinct process ids in order of first appearance
 std::vector<std::string> task3(const std::vector<std::string> &lines) {
-    const std::regex re(P.substr(0, 0) + "^[0-9-]+ [0-9:.]+ +([0-9]+) +[0-9]+ [IDVEFAW] ");
+    const std::regex re("^[0-9-]+ [0-9:.]+ +([0-9]+) +[0-9]+ [IDVEFAW] ");
     std::set<std::string> seen;
     std::vector<std::string> out;
     std::smatch m;
@@ -100,7 +105,7 @@ std::vector<std::string> task3(const std::vector<std::string> &lines) {
     return out;
 }
 
-// 4. process with the most errors
+// --rgx 4: process with the most errors
 std::vector<std::string> task4(const std::vector<std::string> &lines) {
     const std::regex re("^[0-9-]+ [0-9:.]+ +([0-9]+) +[0-9]+ E ");
     std::map<std::string, int> cnt;
@@ -123,7 +128,7 @@ std::vector<std::string> task4(const std::vector<std::string> &lines) {
     return out;
 }
 
-// 5. errors on the main thread (pid == tid)
+// --rgx 5: errors on the main thread (pid == tid)
 std::vector<std::string> task5(const std::vector<std::string> &lines) {
     const std::regex re("^[0-9-]+ [0-9:.]+ +([0-9]+) +\\1 E ");
     int count = 0;
